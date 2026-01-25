@@ -6,8 +6,8 @@ backend:
   client_id: xxx  
   base_url: https://api.sveltia.org
 
-media_folder: "public/img"
-public_folder: "/img"
+media_folder: "public/assets/img"
+public_folder: "/assets/img"
 
 collections:
 
