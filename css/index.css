@@ -1365,7 +1365,7 @@ a.tags {color: var(--muted-text); font-weight: normal; text-decoration: none;}
     pointer-events: none;
     transform: scale(0.8);
 }
-@media (max-width: 1250px) {
+@media (min-width: 451px) and (max-width: 1199px) {
     .menu-btn {
         top: 110px; 
         left: 20px; 
@@ -1427,8 +1427,11 @@ a.tags {color: var(--muted-text); font-weight: normal; text-decoration: none;}
 
 @media (min-width: 1400px) {
     .menu-btn {
-        position: relative;
-        left: 0;
+        
+    position: fixed;
+	left: calc(50% - 500px - 60px); 
+        top: 2rem;
+        
         right: auto;
         margin-right: 20px;
         order: -1;
