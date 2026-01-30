@@ -1,0 +1,142 @@
+site: "Ebenezer Project"
+base_url: "https://ebenezer.net"
+
+media:
+  input: "public/assets/img"
+  output: "/assets/img"
+
+collections:
+  - name: "pages"
+    label: "Pages"
+    path: "content"
+    files:
+      - name: "home"
+        label: "Home Page"
+        path: "index.md"
+        fields:
+          - { name: "title", label: "Title", type: "string" }
+          - { name: "description", label: "Description", type: "text" }
+          - name: "button1"
+            label: "Button 1"
+            type: "object"
+            fields:
+              - { name: "text", label: "Text", type: "string" }
+              - { name: "url", label: "URL", type: "string" }
+          - name: "button2"
+            label: "Button 2"
+            type: "object"
+            fields:
+              - { name: "text", label: "Text", type: "string" }
+              - { name: "url", label: "URL", type: "string" }
+          - { name: "tags", label: "Tags", type: "list" }
+          - { name: "body", label: "Body", type: "markdown" }
+
+  - name: "pages_collection"
+    label: "Static Pages"
+    path: "content/page"
+    extension: "md"
+    fields:
+      - { name: "title", label: "Title", type: "string" }
+      - { name: "description", label: "Description", type: "text" }
+      - { name: "permalink", label: "Permalink", type: "string" }
+      - { name: "body", label: "Body", type: "markdown" }
+
+  - name: "blog"
+    label: "Articles"
+    path: "content/blog"
+    extension: "md"
+    fields:
+      - { name: "title", label: "Title", type: "string" }
+      - { name: "date", label: "Publish Date", type: "date" }
+      - { name: "description", label: "Description", type: "text" }
+      - { name: "image", label: "Featured Image", type: "image" }
+      - { name: "author", label: "Authors", type: "string" }
+      - { name: "tags", label: "Tags", type: "list" }
+      - { name: "body", label: "Body", type: "markdown" }
+
+  - name: "sponsors"
+    label: "Sponsors"
+    path: "_data"
+    files:
+      - name: "sponsors"
+        label: "Sponsors"
+        path: "sponsors.yaml"
+        fields:
+          - { name: "title", label: "Title", type: "string" }
+          - { name: "description", label: "Description", type: "text" }
+          - name: "list"
+            label: "Sponsor List"
+            type: "list"
+            fields:
+              - { name: "title", label: "Title", type: "string" }
+              - { name: "image", label: "Image", type: "image" }
+              - { name: "url", label: "URL", type: "string" }
+              - { name: "alt", label: "Alt Text", type: "string" }
+
+  - name: "data"
+    label: "Global Data"
+    path: "_data"
+    files:
+      - name: "authors"
+        label: "Authors List"
+        path: "authors.yaml"
+        fields:
+          - name: "authors"
+            label: "Authors"
+            type: "list"
+            fields:
+              - { name: "key", label: "Key", type: "string" }
+              - { name: "name", label: "Full Name", type: "string" }
+              - { name: "bio", label: "Biography", type: "text" }
+              - { name: "article", label: "Article", type: "text" }
+              - { name: "image", label: "Profile Image", type: "image" }
+              - name: "social"
+                label: "Social Links"
+                type: "list"
+                fields:
+                  - { name: "title", label: "Platform Title", type: "string" }
+                  - { name: "icon", label: "Icon Class", type: "string" }
+                  - { name: "url", label: "URL", type: "string" }
+
+      - name: "design"
+        label: "Design & Navbar"
+        path: "design.yaml"
+        fields:
+          - name: "navbar"
+            label: "Navbar Settings"
+            type: "object"
+            fields:
+              - { name: "title", label: "Title", type: "string" }
+              - { name: "subtitle", label: "Subtitle", type: "string" }
+              - { name: "logo", label: "Logo Path", type: "image" }
+              - { name: "left_text", label: "Left Text", type: "string" }
+              - { name: "right_text", label: "Right Text", type: "string" }
+          - name: "sidebar"
+            label: "Sidebar Settings"
+            type: "object"
+            fields:
+              - { name: "search", label: "Search Placeholder", type: "string" }
+              - { name: "themes_button", label: "Theme Switch Text", type: "string" }
+          - { name: "toc", label: "TOC Title", type: "string" }
+          - { name: "show_toc_on_article", label: "Show TOC", type: "boolean" }
+          - name: "footer"
+            label: "Footer Text"
+            type: "object"
+            fields:
+              - { name: "text", label: "Copyright", type: "string" }
+
+      - name: "metadata"
+        label: "Site Metadata"
+        path: "metadata.yaml"
+        fields:
+          - { name: "title", label: "Site Title", type: "string" }
+          - { name: "description", label: "Description", type: "text" }
+          - { name: "url", label: "Base URL", type: "string" }
+          - { name: "language", label: "Language", type: "string" }
+          - name: "metasocial"
+            label: "Social Metadata"
+            type: "object"
+            fields:
+              - { name: "facebook", label: "Facebook URL", type: "string" }
+              - { name: "twitter", label: "Twitter/X URL", type: "string" }
+ 
