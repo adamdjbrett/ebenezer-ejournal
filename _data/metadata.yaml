@@ -62,6 +62,8 @@ show_toc_on_home: false
 footer:
   text: "Creative Commons Attribution 4.0 International ([CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)) licence"
 
+sponsors_enabled: false
+
 #sponsors:
   #title: "SPONSORS"
   #description: |
