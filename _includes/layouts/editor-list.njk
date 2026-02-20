@@ -1,0 +1,138 @@
+---
+layout: layouts/base.njk
+---
+<header class="journal-header">
+    <h2><a href="{{ page.url }}">Editors</a></h2>
+    <p class="tagline text-center">Meet the editorial team</p>
+</header>
+
+<div class="editors-grid-container">
+    <section class="editors-grid">
+        {% for editor in collections.editors %}
+            {% set editorName = editor.data.name or editor.data.title %}
+            {% set rawImage = editor.data.image | default('') %}
+            {% set hasAvatar = rawImage and rawImage != '/assets/img/' and rawImage != '/assets/img' %}
+            {% set parts = editorName.split(' ') %}
+            {% set firstInitial = (parts[0][0] | upper) if parts and parts[0] else '?' %}
+            {% set lastInitial = (parts[parts.length - 1][0] | upper) if parts and parts.length > 1 and parts[parts.length - 1] else '' %}
+            {% set initials = firstInitial + lastInitial %}
+
+            <article class="editor-card">
+                <a href="{{ editor.url }}" class="none editor-avatar-link">
+                    {% if hasAvatar %}
+                        <img src="{{ rawImage }}" alt="{{ editorName }}" class="editor-avatar">
+                    {% else %}
+                        <span class="editor-avatar editor-avatar-fallback" aria-hidden="true">{{ initials }}</span>
+                    {% endif %}
+                </a>
+                <div class="editor-card-info">
+                    <h3><a href="{{ editor.url }}">{{ editorName }}</a></h3>
+
+                    {% if editor.data.role %}
+                    <p class="editor-meta-row">
+                        {% icon 'fas', 'fa-user-tie', 'editor-meta-icon' %}
+                        <span>{{ editor.data.role }}</span>
+                    </p>
+                    {% endif %}
+
+                    {% if editor.data.orcid or editor.data.hcommons or editor.data.website or editor.data.email %}
+                    <div class="editor-link-icons">
+                        {% if editor.data.orcid %}
+                        <a href="https://orcid.org/{{ editor.data.orcid }}" target="_blank" rel="noopener" aria-label="ORCID" title="ORCID">
+                            {% icon 'fab', 'fa-orcid', 'editor-meta-icon' %}
+                        </a>
+                        {% endif %}
+
+                        {% if editor.data.hcommons %}
+                        <a href="{{ editor.data.hcommons }}" target="_blank" rel="noopener" aria-label="Humanities Commons" title="Humanities Commons">
+                            {% icon 'fas', 'fa-users', 'editor-meta-icon' %}
+                        </a>
+                        {% endif %}
+
+                        {% if editor.data.website %}
+                        <a href="{{ editor.data.website }}" target="_blank" rel="noopener" aria-label="Website" title="Website">
+                            {% icon 'fas', 'fa-globe', 'editor-meta-icon' %}
+                        </a>
+                        {% endif %}
+
+                        {% if editor.data.email %}
+                        <a href="mailto:{{ editor.data.email }}" aria-label="Email" title="Email">
+                            {% icon 'fas', 'fa-envelope', 'editor-meta-icon' %}
+                        </a>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                </div>
+            </article>
+        {% endfor %}
+    </section>
+</div>
+
+<style>
+.editors-grid-container {
+    margin: 4rem auto;
+    padding: 0 20px;
+}
+.editors-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+}
+.editor-card {
+    display: grid;
+    grid-template-columns: 88px 1fr;
+    gap: 1rem;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--border-color);
+}
+.editor-avatar-link {
+    display: inline-flex;
+}
+.editor-avatar {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    border: 1px solid var(--border-color);
+    object-fit: cover;
+}
+.editor-avatar-fallback {
+    align-items: center;
+    background: var(--text-color);
+    color: var(--bg-color);
+    display: inline-flex;
+    font-family: var(--heading-font);
+    font-size: 1rem;
+    font-weight: 700;
+    justify-content: center;
+    letter-spacing: 0.04em;
+}
+.editor-card-info h3 {
+    margin: 0 0 0.4rem 0;
+}
+.editor-card-info h3 a {
+    text-decoration: none;
+}
+.editor-meta-row {
+    align-items: center;
+    display: flex;
+    gap: 0.4rem;
+    margin: 0.35rem 0;
+    text-align: left;
+}
+.editor-meta-row a {
+    overflow-wrap: anywhere;
+}
+.editor-meta-icon {
+    min-width: 1.2em;
+}
+.editor-link-icons {
+    align-items: center;
+    display: flex;
+    gap: 0.65rem;
+    margin: 0.35rem 0;
+}
+.editor-link-icons a {
+    display: inline-flex;
+    text-decoration: none;
+}
+</style>

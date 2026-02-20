@@ -37,6 +37,11 @@ export default async function(eleventyConfig) {
             return false;
         }
     });
+    eleventyConfig.addPreprocessor("published", "*", (data, content) => {
+        if (data.published === false) {
+            return false;
+        }
+    });
 
     eleventyConfig
         .addPassthroughCopy({ "./public/": "/" })
@@ -118,6 +123,17 @@ const iconHandler = (iconType, iconName, classNames = "") => {
 eleventyConfig.addFilter("getAuthor", (authorList, authKey) => {
     return authorList.find(a => a.key === authKey);
   });
+    eleventyConfig.addCollection("editors", (collectionApi) =>
+        collectionApi
+            .getFilteredByGlob("content/editors/*.md")
+            .filter((item) => item.data.published !== false)
+            .sort((a, b) => {
+                const aOrder = Number.parseInt(String(a.data.order ?? "9999"), 10);
+                const bOrder = Number.parseInt(String(b.data.order ?? "9999"), 10);
+                if (aOrder !== bOrder) return aOrder - bOrder;
+                return String(a.data.name || a.fileSlug).localeCompare(String(b.data.name || b.fileSlug));
+            })
+    );
     // Transforms
     eleventyConfig.addTransform("purge-css", async function(content) {
         if (process.env.NODE_ENV === "production" && this.page.outputPath && this.page.outputPath.endsWith(".html")) {
@@ -229,12 +245,82 @@ eleventyConfig.addFilter("getAuthors", (authors, label) => {
     let labels = label.split(','); 
     return authors.filter(a => labels.includes(a.key));
 });
+const normalizePersonKey = (value) =>
+    String(value || "")
+        .trim()
+        .toLowerCase()
+        .replace(/[_\s]+/g, "-");
+const getNormalizedCandidates = (...values) =>
+    values
+        .map((v) => normalizePersonKey(v))
+        .filter(Boolean);
+
 eleventyConfig.addFilter("findAuthorByKey", (authors, authorKey) => {
         if (!authorKey || !authors || !Array.isArray(authors)) return null;
-        const key = String(authorKey).trim().toLowerCase();
+        const key = normalizePersonKey(authorKey);
         return authors.find(author => 
-            String(author.key || '').trim().toLowerCase() === key
+            getNormalizedCandidates(author.key, author.name).includes(key)
         );
+    });
+eleventyConfig.addFilter("findContributorByKey", (authors, editors, lookup) => {
+        if (!lookup) return null;
+        const key = normalizePersonKey(lookup);
+
+        if (Array.isArray(authors)) {
+            const authorMatch = authors.find((author) =>
+                getNormalizedCandidates(author.key, author.name).includes(key)
+            );
+            if (authorMatch) {
+                const authorSlug = normalizePersonKey(authorMatch.key || authorMatch.name);
+                return {
+                    ...authorMatch,
+                    key: authorSlug,
+                    name: authorMatch.name || authorSlug,
+                    image: authorMatch.image || null,
+                    url: `/authors/${authorSlug}/`,
+                    type: "author",
+                };
+            }
+        }
+
+        if (Array.isArray(editors)) {
+            const editorMatch = editors.find((editor) => {
+                const editorKeys = getNormalizedCandidates(
+                    editor?.data?.key,
+                    editor?.data?.name,
+                    editor?.fileSlug,
+                    editor?.page?.fileSlug
+                );
+                return editorKeys.includes(key);
+            });
+            if (editorMatch) {
+                const editorSlug = normalizePersonKey(
+                    editorMatch?.data?.key || editorMatch?.fileSlug || editorMatch?.page?.fileSlug || editorMatch?.data?.name
+                );
+                return {
+                    ...editorMatch.data,
+                    key: editorSlug,
+                    name: editorMatch?.data?.name || editorSlug,
+                    image: editorMatch?.data?.image || null,
+                    url: editorMatch.url || `/editors/${editorSlug}/`,
+                    type: "editor",
+                };
+            }
+        }
+
+        return null;
+    });
+eleventyConfig.addFilter("findEditorByKey", (editors, lookup) => {
+        if (!lookup || !Array.isArray(editors)) return null;
+        const key = normalizePersonKey(lookup);
+        return editors.find((editor) =>
+            getNormalizedCandidates(
+                editor?.data?.key,
+                editor?.data?.name,
+                editor?.fileSlug,
+                editor?.page?.fileSlug
+            ).includes(key)
+        ) || null;
     });
 	
   let markdownLib = markdownIt(options).use(markdownItAttrs).use(markdownItFootnote).use(markdownItTableOfContents);

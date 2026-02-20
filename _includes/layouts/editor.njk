@@ -1,0 +1,114 @@
+---
+layout: layouts/base.njk
+---
+{% set editorName = name or title %}
+{% set rawImage = image | default('') %}
+{% set hasAvatar = rawImage and rawImage != '/assets/img/' and rawImage != '/assets/img' %}
+{% set parts = editorName.split(' ') %}
+{% set firstInitial = (parts[0][0] | upper) if parts and parts[0] else '?' %}
+{% set lastInitial = (parts[parts.length - 1][0] | upper) if parts and parts.length > 1 and parts[parts.length - 1] else '' %}
+{% set initials = firstInitial + lastInitial %}
+
+<section class="editor-profile">
+    <div class="editor-profile-avatar-wrap">
+        {% if hasAvatar %}
+            <img class="editor-profile-avatar" src="{{ rawImage }}" alt="{{ editorName }}">
+        {% else %}
+            <span class="editor-profile-avatar editor-profile-avatar-fallback" aria-hidden="true">{{ initials }}</span>
+        {% endif %}
+    </div>
+
+    <div class="editor-profile-meta">
+        <h1>{{ editorName }}</h1>
+        {% if role %}
+        <p class="editor-profile-role">{{ role }}</p>
+        {% endif %}
+
+        <div class="editor-profile-links">
+            {% if orcid %}
+            <a href="https://orcid.org/{{ orcid }}" target="_blank" rel="noopener" aria-label="ORCID">
+                {% icon 'fab', 'fa-orcid', 'editor-profile-icon' %}
+            </a>
+            {% endif %}
+            {% if hcommons %}
+            <a href="{{ hcommons }}" target="_blank" rel="noopener" aria-label="Humanities Commons">
+                {% icon 'fas', 'fa-users', 'editor-profile-icon' %}
+            </a>
+            {% endif %}
+            {% if website %}
+            <a href="{{ website }}" target="_blank" rel="noopener" aria-label="Website">
+                {% icon 'fas', 'fa-globe', 'editor-profile-icon' %}
+            </a>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="editor-profile-content">
+        {{ content | safe }}
+    </div>
+</section>
+
+<style>
+.editor-profile {
+    display: grid;
+    gap: 1.2rem 1.6rem;
+    grid-template-columns: 150px minmax(0, 1fr);
+    margin: 1rem auto 0 auto;
+    max-width: 900px;
+}
+.editor-profile-avatar-wrap {
+    display: flex;
+    justify-content: center;
+}
+.editor-profile-avatar {
+    border: 1px solid var(--border-color);
+    border-radius: 50%;
+    height: 150px;
+    object-fit: cover;
+    width: 150px;
+}
+.editor-profile-avatar-fallback {
+    align-items: center;
+    background: var(--text-color);
+    color: var(--bg-color);
+    display: inline-flex;
+    font-family: var(--heading-font);
+    font-size: 1.4rem;
+    font-weight: 700;
+    justify-content: center;
+    letter-spacing: 0.04em;
+}
+.editor-profile-meta h1 {
+    margin: 0;
+}
+.editor-profile-role {
+    color: var(--muted-text);
+    margin: 0.35rem 0 0.7rem 0;
+}
+.editor-profile-links {
+    align-items: center;
+    display: flex;
+    gap: 0.9rem;
+}
+.editor-profile-links a {
+    text-decoration: none;
+}
+.editor-profile-icon {
+    font-size: 1.05rem;
+}
+.editor-profile-content {
+    grid-column: 1 / -1;
+    margin-top: 0.2rem;
+}
+@media (max-width: 700px) {
+    .editor-profile {
+        grid-template-columns: 1fr;
+    }
+    .editor-profile-meta {
+        text-align: center;
+    }
+    .editor-profile-links {
+        justify-content: center;
+    }
+}
+</style>

@@ -8,13 +8,29 @@ layout: layouts/base.njk
 
 <section class="post-list">
     {% for post in pagination.items %}
+    {% set firstAuthorKey = post.data.author.split(',')[0] | trim if post.data.author else '' %}
+    {% set matchedAuthor = authors | findAuthorByKey(firstAuthorKey) %}
+    {% set matchedEditor = collections.editors | findEditorByKey(firstAuthorKey) %}
+    {% set bylineName = post.data.name or (matchedEditor.data.name if matchedEditor else (matchedAuthor.name if matchedAuthor else '')) %}
+    {% set bylineImage = matchedEditor.data.image if matchedEditor else (matchedAuthor.image if matchedAuthor else '') %}
     <article class="post-preview">
+        {% if post.data.image %}
+        <a href="{{ post.url }}" class="none">
+            <img src="{{ post.data.image }}" alt="{{ post.data.title }}" class="post-preview-image">
+        </a>
+        {% endif %}
         <time datetime="{{ post.date | htmlDateString }}">
             {{ post.date | readableDate("LLLL yyyy") }}
         </time>
         <h3 class="post-title">
             <a href="{{ post.url }}">{{ post.data.title }}</a>
         </h3>
+        {% if bylineName %}
+        <p class="post-byline">
+            {% if bylineImage %}<img src="{{ bylineImage }}" alt="{{ bylineName }}" class="post-byline-avatar">{% endif %}
+            <span>{{ bylineName }}</span>
+        </p>
+        {% endif %}
         <p>
             {%- if post.data.description -%}
                 {{ post.data.description }}
@@ -25,6 +41,31 @@ layout: layouts/base.njk
     </article>
     {% endfor %}
 </section>
+
+<style>
+.post-preview-image {
+    width: 100%;
+    max-height: 320px;
+    object-fit: cover;
+    border-radius: 6px;
+    margin: 0 0 0.8rem 0;
+    border: 1px solid var(--border-color);
+}
+.post-byline {
+    display: inline-flex;
+    gap: 0.5rem;
+    align-items: center;
+    margin: 0.25rem 0 0.75rem 0;
+    font-size: 0.95rem;
+    color: var(--muted-text);
+}
+.post-byline-avatar {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+</style>
 
 <nav class="pagination" aria-label="Pagination">
     <a href="{{ pagination.href.previous or '#' }}" 

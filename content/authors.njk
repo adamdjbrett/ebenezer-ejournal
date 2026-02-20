@@ -5,12 +5,12 @@ pagination:
   size: 1
   alias: currentAuthor
   addAllPagesToCollections: true
-permalink: "/authors/{{ currentAuthor.key | slugify }}/"
+permalink: "/authors/{{ (currentAuthor.key or currentAuthor.name) | slugify }}/"
 ---
 
 <!-- Isi header dan konten sama persis seperti yang kamu punya -->
 <header class="journal-header" style="border: none; margin: 0; padding: 0;">
-    {% set authorKey = currentAuthor.key %}
+    {% set authorKey = (currentAuthor.key or currentAuthor.name) | slugify %}
     {% set postsByAuthor = collections.all | byAuthor(authorKey) %}
 
     <div class="header-main" style="border: none;">

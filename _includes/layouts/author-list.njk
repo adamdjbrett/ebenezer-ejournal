@@ -10,14 +10,15 @@ layout: layouts/base.njk
 <div class="authors-grid-container">
     <section class="authors-grid">
         {% for a in authors %}
-            {% set authorPosts = collections.all | byAuthor(a.key) %}
+            {% set authorKey = (a.key or a.name) | slugify %}
+            {% set authorPosts = collections.all | byAuthor(authorKey) %}
             
             <article class="author-card">
-                <a href="/authors/{{ a.key | slugify }}/" class="none">
+                <a href="/authors/{{ authorKey | slugify }}/" class="none">
                     <img src="{{ a.image or metadata.image }}" alt="{{ a.name }}" class="author-card-avatar">
                 </a>
                 <div class="author-card-info">
-                    <h3><a href="/authors/{{ a.key | slugify }}/">{{ a.name }}</a></h3>
+                    <h3><a href="/authors/{{ authorKey | slugify }}/">{{ a.name }}</a></h3>
                     <p>{{ a.description or a.bio }}</p>
                     <span class="post-count">{{ authorPosts.length }} Articles</span>
                 </div>

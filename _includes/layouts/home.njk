@@ -13,30 +13,36 @@ layout: layouts/base.njk
         {%- for authorKey in authorKeys %}
             {% set trimmedKey = authorKey | trim %}
             {% set currentAuthor = authors | findAuthorByKey(trimmedKey) %}
+            {% set currentEditor = collections.editors | findEditorByKey(trimmedKey) %}
+            {% set personName = currentEditor.data.name if currentEditor else (currentAuthor.name if currentAuthor else trimmedKey) %}
+            {% set personImage = currentEditor.data.image if currentEditor else (currentAuthor.image if currentAuthor else metadata.image) %}
+            {% set personBio = currentEditor.data.role if currentEditor else (currentAuthor.bio if currentAuthor else '') %}
+            {% set personUrl = currentEditor.url if currentEditor else ('/authors/' + ((currentAuthor.key or currentAuthor.name) | slugify) + '/' if currentAuthor else '/authors/') %}
+            {% set personLabel = 'EDITOR' if currentEditor else ('AUTHOR' if currentAuthor else 'AUTHOR') %}
             
             <div class="author-post-journal-item">
-                {% if currentAuthor %}
+                {% if currentEditor or currentAuthor %}
                     <div class="author-post-journal-flex">
                         <div class="author-post-journal-image-box">
-                            <a href="/authors/{{ currentAuthor.key }}">
-                                <img src="{{ currentAuthor.image }}"
+                            <a href="{{ personUrl }}">
+                                <img src="{{ personImage }}"
                                      class="author-post-journal-img"
                                      width="120" height="120"
-                                     alt="{{ currentAuthor.name }}"/>
+                                     alt="{{ personName }}"/>
                             </a>
                         </div>
 
                         <div class="author-post-journal-info">
-                            <a href="/authors/{{ currentAuthor.key }}" class="author-post-journal-link">
-                                <span class="author-post-journal-label">AUTHOR</span>
-                                <h3 class="author-post-journal-name">{{ currentAuthor.name }}</h3>
-                                <p class="author-post-journal-bio">{{ currentAuthor.bio }}</p>
+                            <a href="{{ personUrl }}" class="author-post-journal-link">
+                                <span class="author-post-journal-label">{{ personLabel }}</span>
+                                <h3 class="author-post-journal-name">{{ personName }}</h3>
+                                <p class="author-post-journal-bio">{{ personBio }}</p>
                             </a>
                         </div>
                     </div>
                 {% else %}
                     <div class="author-post-journal-fallback">
-                        <a href="/authors/{{ trimmedKey }}">{{ trimmedKey }}</a>
+                        <a href="/authors/">{{ trimmedKey }}</a>
                     </div>
                 {% endif %}
             </div>

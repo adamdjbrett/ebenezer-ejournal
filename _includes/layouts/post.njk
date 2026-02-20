@@ -14,25 +14,30 @@ layout: layouts/base.njk
                 {% for authorKey in authorKeys %}
                     {% set trimmedKey = authorKey | trim %}
                     {% set currentAuthor = authors | findAuthorByKey(trimmedKey) %}
+                    {% set currentEditor = collections.editors | findEditorByKey(trimmedKey) %}
+                    {% set personName = currentEditor.data.name if currentEditor else (currentAuthor.name if currentAuthor else trimmedKey) %}
+                    {% set personImage = currentEditor.data.image if currentEditor else (currentAuthor.image if currentAuthor else null) %}
+                    {% set personUrl = currentEditor.url if currentEditor else ('/authors/' + ((currentAuthor.key or currentAuthor.name) | slugify) + '/' if currentAuthor else '/authors/') %}
+                    {% set personSocial = currentAuthor.social if (currentAuthor and not currentEditor) else null %}
                     
                     <div class="author-info">
-                        {% if currentAuthor and currentAuthor.image %}
-                            <a href="/authors/{{ currentAuthor.key }}" title="{{ currentAuthor.name }}"><img src="{{ currentAuthor.image }}" 
-                                 alt="{{ currentAuthor.name }}" 
-                                 class="author-avatar">
+                        {% if personImage %}
+                            <a href="{{ personUrl }}" title="{{ personName }}"><img src="{{ personImage }}" 
+                                 alt="{{ personName }}" 
+                                 class="author-avatar"></a>
                         {% else %}
-                            <a href="/authors/{{ currentAuthor.key }}" title="{{ currentAuthor.name }}"><img src="https://ui-avatars.com/api/?name={{ trimmedKey | replace(' ', '+') }}&background=random" 
+                            <a href="{{ personUrl }}" title="{{ personName }}"><img src="https://ui-avatars.com/api/?name={{ trimmedKey | replace(' ', '+') }}&background=random" 
                                  alt="Author" 
                                  class="author-avatar"></a>
                         {% endif %}
                         
                         <div class="author-text">
-                            <span class="author-name"><a href="/authors/{{ currentAuthor.key }}" class="none">{{ currentAuthor.name or trimmedKey }} 
+                            <span class="author-name"><a href="{{ personUrl }}" class="none">{{ personName }} 
                                 <!-- <br/><small>{{ currentAuthor.bio }}</small> -->
                                 </a></span>
-                            {% if currentAuthor.social %}
+                            {% if personSocial %}
                             <span class="author-links">
-                            {% for s in currentAuthor.social %}<a href="{{ s.url }}" class="social-link" target="_blank" rel="noopener" aria-label="{{ s.title | default('Social link') | escape }}">{% icon 'fab', s.icon, 'social-icon' %}</a>{% endfor %}
+                            {% for s in personSocial %}<a href="{{ s.url }}" class="social-link" target="_blank" rel="noopener" aria-label="{{ s.title | default('Social link') | escape }}">{% icon 'fab', s.icon, 'social-icon' %}</a>{% endfor %}
                             {% endif %}
                         </div>
                     </div>
