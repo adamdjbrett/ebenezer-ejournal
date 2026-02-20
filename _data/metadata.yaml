@@ -1,7 +1,9 @@
 title: "Ebenezer"
 description: "A JOURNAL OF PUBLIC THEOLOGY & PUBLIC WITNESS"
 url: "https://journal.publictheology.com"
-#url: "https://ebenezer.pub"
+primary_domain: "journal.publictheology.com"
+fallback_domains:
+  - "ebenezer.pub"
 language: "en"
 locale: "en_US"
 favicon: "/assets/img/ebenezer-vert.png"

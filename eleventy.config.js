@@ -377,10 +377,10 @@ eleventyConfig.addFilter("findEditorByKey", (editors, lookup) => {
         collection: { name: "posts", limit: 10 },
         metadata: {
             language: "en",
-            title: "Blog Title",
-            subtitle: "Description",
-            base: "https://example.com/",
-            author: { name: "Your Name" }
+            title: "Ebenezer",
+            subtitle: "A JOURNAL OF PUBLIC THEOLOGY & PUBLIC WITNESS",
+            base: "https://journal.publictheology.com/",
+            author: { name: "Adam DJ Brett" }
         }
     });
 
